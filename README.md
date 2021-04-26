@@ -58,17 +58,17 @@ D-Pad mode is saved across power cycles.
 
 By default, the controller will use an Xbox color scheme for XInput, and a Super Famicom color schema for Switch mode. You can also override the color scheme by **holding the following button(s) as the controller is plugged in:**
 
-| LED Effect/Layout | XInput | Switch | Arcade [P1, K2, etc.] |
-| :---------------- | :----- | :----- | :-------------------- |
-| Xbox | X | Y | P1 |
-| Super Famicom | Y | X | P2 |
-| Six Button Fighter (SF and KI) | RB | R | P3 |
-| Guilty Gear Type-A | LB | L | P4 |
-| Neo-Geo Straight | A | B | K1 |
-| Neo-Geo Curved | B | A | K2 |
-| Neo-Geo Modern (2x2 layout) | RT | ZR | K3 |
-| Guilty Gear Custom (my layout) | LT | ZL | K4 |
-| Static Rainbow | X + Y + RB + LB | Y + X + R + L | P1 + P2 + P3 + P4 |
+| LED Effect/Layout | XInput | Switch | Arcade [P1, K2, etc.] | Preview |
+| :---------------- | :----- | :----- | :-------------------- | ------- |
+| Xbox | X | Y | P1 | ![Xbox](.assets/images/XBOX.jpg) |
+| Super Famicom | Y | X | P2 | ![Super Famicom](.assets/images/SFC.jpg) |
+| Six Button Fighter (SF and KI) | RB | R | P3 | ![Six Button Fighter](.assets/images/SIX_BUTTON.jpg) |
+| Guilty Gear Type-A | LB | L | P4 | ![Guilty Gear Type-A](.assets/images/GG_TYPE_A.jpg) |
+| Neo-Geo Straight | A | B | K1 | ![Neo-Geo Straight](.assets/images/NEOGEO_STRAIGHT.jpg) |
+| Neo-Geo Curved | B | A | K2 | ![Neo-Geo Curved](.assets/images/NEOGEO_CURVED.jpg) |
+| Neo-Geo Modern (2x2 layout) | RT | ZR | K3 | ![Neo-Geo Modern](.assets/images/NEOGEO_MODERN.jpg) |
+| Guilty Gear Custom (my layout) | LT | ZL | K4 | ![Guilty Gear Custom](.assets/images/GG_CUSTOM.jpg) |
+| Static Rainbow | X + Y + RB + LB | Y + X + R + L | P1 + P2 + P3 + P4 | ![Static Rainbow](.assets/images/STATIC_RAINBOW.jpg) |
 
 The overridden LED mode will be saved across power cycles, and can be cleared by holding `R3` when plugging the controller in.
 
