@@ -1,12 +1,10 @@
 #ifndef _LED_MAPPER_
 #define _LED_MAPPER_
 
-#include <FastLED.h>
+#include <Adafruit_NeoPixel.h>
 
 #define LED_PIN 5
-#define LED_BUTTON_COUNT 16
-#define LEDS_PER_BUTTON 1
-#define LED_COUNT (LED_BUTTON_COUNT * LEDS_PER_BUTTON)
+#define LED_COUNT 12
 #define COLUMN_COUNT 7
 #define COLUMN_HEIGHT 2
 
@@ -37,52 +35,191 @@ const int ColumnMatrix[COLUMN_COUNT][COLUMN_HEIGHT] = {
 };
 
 struct ButtonColorMap {
-	ButtonColorMap(uint8_t bi, CRGB bc)
+	ButtonColorMap(uint8_t bi, uint32_t bc)
 		: buttonIndex(bi), buttonColor(bc) { }
 	uint8_t buttonIndex;
-	CRGB buttonColor;
+	uint32_t buttonColor;
 };
 
-// const ButtonColorMap XboxColorMapping[LED_BUTTON_COUNT] = {
-// 	ButtonColorMap(LED_INDEX_P1, CRGB::Blue),      // X
-// 	ButtonColorMap(LED_INDEX_P2, CRGB::Yellow),    // Y
-// 	ButtonColorMap(LED_INDEX_P3, CRGB::LightBlue), // RB
-// 	ButtonColorMap(LED_INDEX_P4, CRGB::Purple),    // LB
-// 	ButtonColorMap(LED_INDEX_K4, CRGB::Orange),    // LT
-// 	ButtonColorMap(LED_INDEX_K3, CRGB::Magenta),   // RT
-// 	ButtonColorMap(LED_INDEX_K2, CRGB::Red),       // B
-// 	ButtonColorMap(LED_INDEX_K1, CRGB::Green),     // A
-// 	ButtonColorMap(LED_INDEX_RIGHT, CRGB::White),
-// 	ButtonColorMap(LED_INDEX_DOWN, CRGB::White),
-// 	ButtonColorMap(LED_INDEX_LEFT, CRGB::White),
-// 	ButtonColorMap(LED_INDEX_UP, CRGB::White),
-// };
+Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRBW + NEO_KHZ800);
 
-inline void configureLeds(CRGB leds[LED_COUNT]) __attribute__((always_inline));
-inline void applyColorMapping(CRGB leds[LED_COUNT], const ButtonColorMap colorMapping[LED_BUTTON_COUNT]) __attribute__((always_inline));
+uint32_t wheel(byte pos) {
+	pos = 255 - pos;
+	if (pos < 85) {
+		return strip.Color(255 - pos * 3, 0, pos * 3);
+	}
+	if (pos < 170) {
+		pos -= 85;
+		return strip.Color(0, pos * 3, 255 - pos * 3);
+	}
+	pos -= 170;
+	return strip.Color(pos * 3, 255 - pos * 3, 0);
+}
+
+static const uint32_t ColorBlack     = strip.Color(  0,   0,   0,   0);
+static const uint32_t ColorWhite     = strip.Color(  0,   0,   0, 255);
+
+static const uint32_t ColorRed       = strip.Color(255,   0,   0,   0);
+static const uint32_t ColorOrange    = strip.Color(255, 128,   0,   0);
+static const uint32_t ColorYellow    = strip.Color(255, 255,   0,   0);
+static const uint32_t ColorLimeGreen = strip.Color(128, 255,   0,   0);
+static const uint32_t ColorGreen     = strip.Color(  0, 255,   0,   0);
+static const uint32_t ColorSeafoam   = strip.Color(  0, 255, 128,   0);
+static const uint32_t ColorAqua      = strip.Color(  0, 255, 255,   0);
+static const uint32_t ColorSkyBlue   = strip.Color(  0, 128, 255,   0);
+static const uint32_t ColorBlue      = strip.Color(  0,   0, 255,   0);
+static const uint32_t ColorPurple    = strip.Color(128,   0, 255,   0);
+static const uint32_t ColorPink      = strip.Color(255,   0, 255,   0);
+static const uint32_t ColorMagenta   = strip.Color(255,   0, 128,   0);
+
+const ButtonColorMap GuiltyGearTypeAColorMapping[LED_COUNT] = {
+	ButtonColorMap(LED_INDEX_P1, ColorBlue),     // K
+	ButtonColorMap(LED_INDEX_P2, ColorGreen),    // S
+	ButtonColorMap(LED_INDEX_P3, ColorRed),      // HS
+	ButtonColorMap(LED_INDEX_P4, ColorBlack),
+	ButtonColorMap(LED_INDEX_K1, ColorPurple),   // P
+	ButtonColorMap(LED_INDEX_K2, ColorBlack),
+	ButtonColorMap(LED_INDEX_K3, ColorOrange),   // D
+	ButtonColorMap(LED_INDEX_K4, ColorBlack),
+	ButtonColorMap(LED_INDEX_RIGHT, ColorWhite),
+	ButtonColorMap(LED_INDEX_DOWN, ColorWhite),
+	ButtonColorMap(LED_INDEX_LEFT, ColorWhite),
+	ButtonColorMap(LED_INDEX_UP, ColorWhite),
+};
+
+const ButtonColorMap NeoGeoCurvedColorMapping[LED_COUNT] = {
+	ButtonColorMap(LED_INDEX_P1, ColorYellow),   // B
+	ButtonColorMap(LED_INDEX_P2, ColorGreen),    // C
+	ButtonColorMap(LED_INDEX_P3, ColorBlue),     // D
+	ButtonColorMap(LED_INDEX_P4, ColorBlack),
+	ButtonColorMap(LED_INDEX_K1, ColorRed),      // A
+	ButtonColorMap(LED_INDEX_K2, ColorBlack),
+	ButtonColorMap(LED_INDEX_K3, ColorBlack),
+	ButtonColorMap(LED_INDEX_K4, ColorBlack),
+	ButtonColorMap(LED_INDEX_RIGHT, ColorWhite),
+	ButtonColorMap(LED_INDEX_DOWN, ColorWhite),
+	ButtonColorMap(LED_INDEX_LEFT, ColorWhite),
+	ButtonColorMap(LED_INDEX_UP, ColorWhite),
+};
+
+const ButtonColorMap NeoGeoModernColorMapping[LED_COUNT] = {
+	ButtonColorMap(LED_INDEX_P1, ColorRed),      // A
+	ButtonColorMap(LED_INDEX_P2, ColorGreen),    // C
+	ButtonColorMap(LED_INDEX_P3, ColorBlack),
+	ButtonColorMap(LED_INDEX_P4, ColorBlack),
+	ButtonColorMap(LED_INDEX_K1, ColorYellow),   // B
+	ButtonColorMap(LED_INDEX_K2, ColorBlue),     // D
+	ButtonColorMap(LED_INDEX_K3, ColorBlack),
+	ButtonColorMap(LED_INDEX_K4, ColorBlack),
+	ButtonColorMap(LED_INDEX_RIGHT, ColorWhite),
+	ButtonColorMap(LED_INDEX_DOWN, ColorWhite),
+	ButtonColorMap(LED_INDEX_LEFT, ColorWhite),
+	ButtonColorMap(LED_INDEX_UP, ColorWhite),
+};
+
+const ButtonColorMap NeoGeoStraightColorMapping[LED_COUNT] = {
+	ButtonColorMap(LED_INDEX_P1, ColorRed),      // A
+	ButtonColorMap(LED_INDEX_P2, ColorYellow),   // B
+	ButtonColorMap(LED_INDEX_P3, ColorGreen),    // C
+	ButtonColorMap(LED_INDEX_P4, ColorBlue),     // D
+	ButtonColorMap(LED_INDEX_K1, ColorBlack),
+	ButtonColorMap(LED_INDEX_K2, ColorBlack),
+	ButtonColorMap(LED_INDEX_K3, ColorBlack),
+	ButtonColorMap(LED_INDEX_K4, ColorBlack),
+	ButtonColorMap(LED_INDEX_RIGHT, ColorWhite),
+	ButtonColorMap(LED_INDEX_DOWN, ColorWhite),
+	ButtonColorMap(LED_INDEX_LEFT, ColorWhite),
+	ButtonColorMap(LED_INDEX_UP, ColorWhite),
+};
+
+const ButtonColorMap SixButtonFighterColorMapping[LED_COUNT] = {
+	ButtonColorMap(LED_INDEX_P1, ColorBlue),     // LP
+	ButtonColorMap(LED_INDEX_P2, ColorYellow),   // MP
+	ButtonColorMap(LED_INDEX_P3, ColorRed),      // HP
+	ButtonColorMap(LED_INDEX_P4, ColorBlack),
+	ButtonColorMap(LED_INDEX_K1, ColorBlue),     // LK
+	ButtonColorMap(LED_INDEX_K2, ColorYellow),   // MK
+	ButtonColorMap(LED_INDEX_K3, ColorRed),      // HK
+	ButtonColorMap(LED_INDEX_K4, ColorBlack),
+	ButtonColorMap(LED_INDEX_RIGHT, ColorWhite),
+	ButtonColorMap(LED_INDEX_DOWN, ColorWhite),
+	ButtonColorMap(LED_INDEX_LEFT, ColorWhite),
+	ButtonColorMap(LED_INDEX_UP, ColorWhite),
+};
+
+const ButtonColorMap SuperFamicomColorMapping[LED_COUNT] = {
+	ButtonColorMap(LED_INDEX_P1, ColorGreen),     // Y
+	ButtonColorMap(LED_INDEX_P2, ColorBlue),      // X
+	ButtonColorMap(LED_INDEX_P3, ColorOrange),    // R
+	ButtonColorMap(LED_INDEX_P4, ColorMagenta),   // L
+	ButtonColorMap(LED_INDEX_K4, ColorAqua),      // ZL
+	ButtonColorMap(LED_INDEX_K3, ColorPurple),    // ZR
+	ButtonColorMap(LED_INDEX_K2, ColorRed),       // A
+	ButtonColorMap(LED_INDEX_K1, ColorYellow),    // B
+	ButtonColorMap(LED_INDEX_RIGHT, ColorWhite),
+	ButtonColorMap(LED_INDEX_DOWN, ColorWhite),
+	ButtonColorMap(LED_INDEX_LEFT, ColorWhite),
+	ButtonColorMap(LED_INDEX_UP, ColorWhite),
+};
+
+const ButtonColorMap XboxColorMapping[LED_COUNT] = {
+	ButtonColorMap(LED_INDEX_P1, ColorBlue),      // X
+	ButtonColorMap(LED_INDEX_P2, ColorYellow),    // Y
+	ButtonColorMap(LED_INDEX_P3, ColorOrange),    // RB
+	ButtonColorMap(LED_INDEX_P4, ColorMagenta),   // LB
+	ButtonColorMap(LED_INDEX_K4, ColorAqua),      // LT
+	ButtonColorMap(LED_INDEX_K3, ColorPurple),    // RT
+	ButtonColorMap(LED_INDEX_K2, ColorRed),       // B
+	ButtonColorMap(LED_INDEX_K1, ColorGreen),     // A
+	ButtonColorMap(LED_INDEX_RIGHT, ColorWhite),
+	ButtonColorMap(LED_INDEX_DOWN, ColorWhite),
+	ButtonColorMap(LED_INDEX_LEFT, ColorWhite),
+	ButtonColorMap(LED_INDEX_UP, ColorWhite),
+};
+
+const uint8_t ColorMapCount = 7;
+
+inline uint8_t configureLeds(bool isXInput) __attribute__((always_inline));
+inline void applyColorMapping(const ButtonColorMap colorMapping[LED_COUNT]) __attribute__((always_inline));
 inline void showLeds() __attribute__((always_inline));
 
-void configureLeds(CRGB leds[LED_COUNT], bool isXInput) {
-	FastLED.addLeds<SK6812, LED_PIN>(leds, LED_COUNT);
-	FastLED.setMaxPowerInVoltsAndMilliamps(5, 250);
-	FastLED.setBrightness(50);
-	for (int i = 0; i < 16; i++)
-		leds[i] = isXInput ? CRGB::White : CRGB::Red;
+uint8_t configureLeds(bool isXInput) {
+	strip.begin();
+	strip.setBrightness(64); // 25% Brightness
+
+	if (isXInput) {
+		applyColorMapping(XboxColorMapping);
+		return 0;
+	} else {
+		applyColorMapping(SuperFamicomColorMapping);
+		return 1;
+	}
+}
+
+void applyColorMapping(const ButtonColorMap colorMapping[LED_COUNT]) {
+	for (uint8_t i = 0; i < LED_COUNT; i++)
+		strip.setPixelColor(colorMapping[i].buttonIndex, colorMapping[i].buttonColor);
 
 	showLeds();
 }
 
-void applyColorMapping(CRGB leds[LED_COUNT], const ButtonColorMap colorMapping[LED_BUTTON_COUNT]) {
-	for (uint8_t b = 0; b < LED_BUTTON_COUNT; b++) {
-		for (uint8_t i = 0; i < LEDS_PER_BUTTON; i++)
-			leds[(colorMapping[b].buttonIndex * LEDS_PER_BUTTON) + i] = colorMapping[b].buttonColor;
-	}
+void selectColorMapping(uint8_t index) {
+	if (index > ColorMapCount)
+		index = 0;
 
-	FastLED.show();
+	switch (index) {
+		case 0: applyColorMapping(XboxColorMapping); break;
+		case 1: applyColorMapping(SuperFamicomColorMapping); break;
+		case 2: applyColorMapping(SixButtonFighterColorMapping); break;
+		case 3: applyColorMapping(GuiltyGearTypeAColorMapping); break;
+		case 4: applyColorMapping(NeoGeoStraightColorMapping); break;
+		case 5: applyColorMapping(NeoGeoCurvedColorMapping); break;
+		case 6: applyColorMapping(NeoGeoModernColorMapping); break;
+	}
 }
 
 void showLeds() {
-	FastLED.show();
+	strip.show();
 }
 
 #endif

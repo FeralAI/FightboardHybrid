@@ -2,13 +2,13 @@
 #include <LUFA.h>
 #include "XS_HID.h"
 #include <EEPROM.h>
-#include <FastLED.h>
 
 #include "Mapping/Fightboard.h"
 #include "LEDController.h"
 
 #define EEPROM_INPUT_MODE_OFFSET 0
 #define EEPROM_DPAD_MODE_OFFSET 1
+#define EEPROM_LED_MODE_OFFSET 3
 
 #define AXIS_MIN 0
 #define AXIS_MID 128
@@ -22,10 +22,10 @@ typedef enum {
 
 bool xinput = true;                      // Using XInput?
 byte dpadStates[4] = { };                // The dpad input states
+byte ledMode = 0xff;                     // The selected LED mode
 byte buttonStates[BUTTON_INDICES] = { }; // The button states
 DpadMode dpadMode;                       // Current D-Pad mode
 Fightboard board;                        // The board instance
-CRGB leds[LED_COUNT];
 
 inline void setButton(ButtonMapping mapping, uint8_t portStates[], uint8_t lastButtonStates[]) __attribute__((always_inline));
 inline void setDpad(uint8_t portStates[], uint8_t lastDpadStates[]) __attribute__((always_inline));
@@ -33,11 +33,12 @@ inline void setDpad(uint8_t portStates[], uint8_t lastDpadStates[]) __attribute_
 void setup() {
 	EEPROM.get(EEPROM_INPUT_MODE_OFFSET, xinput);
 	EEPROM.get(EEPROM_DPAD_MODE_OFFSET, dpadMode);
+	EEPROM.get(EEPROM_LED_MODE_OFFSET, ledMode);
 
 	board.setupPins();
 	delay(500);
 	setInputMode();
-	configureLeds(leds, xinput);
+	setLedMode(configureLeds(xinput));
 
 	SetupHardware(xinput);
 	GlobalInterruptEnable();
@@ -84,6 +85,31 @@ void setInputMode() {
 		xinput = true;
 		EEPROM.put(EEPROM_INPUT_MODE_OFFSET, xinput);
 	}
+}
+
+void setLedMode(uint8_t autoLedMode) {
+	uint8_t newLedMode = 255;
+	if (digitalRead(PIN_P1) == LOW) newLedMode = 0;
+	if (digitalRead(PIN_P2) == LOW) newLedMode = 1;
+	if (digitalRead(PIN_P3) == LOW) newLedMode = 2;
+	if (digitalRead(PIN_P4) == LOW) newLedMode = 3;
+	if (digitalRead(PIN_K1) == LOW) newLedMode = 4;
+	if (digitalRead(PIN_K2) == LOW) newLedMode = 5;
+	if (digitalRead(PIN_K3) == LOW) newLedMode = 6;
+	if (digitalRead(PIN_K4) == LOW) {
+		// Clear saved value
+		EEPROM.put(EEPROM_LED_MODE_OFFSET, 255);
+		ledMode = autoLedMode;
+	}
+
+	if (newLedMode != 255) {
+		ledMode = newLedMode;
+		EEPROM.put(EEPROM_LED_MODE_OFFSET, ledMode);
+	} else if (ledMode > ColorMapCount) {
+		ledMode = autoLedMode;
+	}
+
+	selectColorMapping(ledMode);
 }
 
 void setButton(ButtonMapping mapping, uint8_t portStates[], uint8_t lastButtonStates[]) {

@@ -6,9 +6,27 @@ Custom firmware for the Fightboard and Fightboard MX by thnikk.
 
 The stock Fightboard firmware supports XInput and a bunch of extra features like profiles, remapping buttons, setting LEDs, etc. Well...this firmware has none of that and is instead focused on performance and enhancing system compatibility. It currently supports XInput (PC, Android, Raspberry Pi) and Nintendo Switch modes.
 
+## Layout
+
+This firmware uses the standard fightstick layout for the 8 main buttons:
+
+**XInput**:
+
+```text
+X Y RB LB
+A B RT LT
+```
+
+**Switch**:
+
+```text
+Y X  R  L
+B A ZR ZL
+```
+
 ## Features
 
-> NOTE: Any persistent configuration will be cleared when reflashing the controller!
+> NOTE: Any saved configuration will be cleared when reflashing the controller!
 
 ### Input Modes
 
@@ -17,7 +35,7 @@ To change the input mode, hold one of the following buttons as the controller is
 * `SELECT` - Nintendo Switch
 * `START` - XInput
 
-Input mode is persistent across power cycles.
+Input mode is saved across power cycles.
 
 ### D-Pad Modes
 
@@ -27,13 +45,27 @@ You can switch between the 3 stick modes while the controller is in use by press
 * `LEFT` - Emulate Left Analog stick
 * `RIGHT` - Emulate Right Analog stick
 
-D-Pad mode is persistent across power cycles.
+D-Pad mode is saved across power cycles.
+
+### LED Modes
+
+By default, the controller will use an Xbox color scheme for XInput, and a Super Famicom color schema for Switch mode. You can also override the color scheme by holding one of the following buttons when plugging in the controller (XInput buttons):
+
+* `X Button` - Xbox
+* `Y Button` - Super Famicom
+* `RB Button` - Six Button Fighter (Street Fighter and Killer Instinct)
+* `LB Button` - Guilty Gear Type-A
+* `A Button` - Neo-Geo Straight
+* `B Button` - Neo-Geo Curved
+* `Right Trigger` - Neo-Geo Modern (2x2 layout)
+
+The overridden LED mode will be saved across power cycles, and can be cleared by holding `Left Trigger` when plugging the controller in.
 
 ## TODO List
 
 * [x] XInput support
 * [x] Switch support
-* [ ] Add LED support
+* [x] Add LED support
 * [ ] Review button state logic
 * [ ] Optimize HID report construction
 * [ ] Break apart XInput and Switch USB code
