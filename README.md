@@ -6,7 +6,19 @@ Custom firmware for the Fightboard and Fightboard MX by thnikk.
 
 The stock Fightboard firmware supports XInput and a bunch of extra features like profiles, remapping buttons, setting LEDs, etc. Well...this firmware has none of that and is instead focused on performance and enhancing system compatibility. It currently supports XInput (PC, Android, Raspberry Pi) and Nintendo Switch modes.
 
-## Button Layout
+## Installation
+
+An update package is provided that uses PowerShell and a bundled version of avrdude to handle flashing the microcontroller in the Fightboard. If you're familiar with this process or on Linux/Mac, you can just extract the `.hex` file and flash it manually with your platform's version of avrdude. Otherwise, follow these steps to update your firmware:
+
+1. Download and extract the latest firmware update package from [Releases](https://github.com/FeralAI/FightboardHybrid/releases).
+1. Press the reset button twice quickly on the bottom of your Fightboard. You'll need a small screwdriver or toothpick to press it. This will put the microcontroller into bootloader mode for about 10 seconds.
+1. Run the `update.bat` file from the extracted firmware update folder. Make sure you do this within a few seconds of resetting the board otherwise it will fail.
+
+That's it! If all went well you should see a success message at the end like `avrdude.exe: 15206 bytes of flash verified` and `avrdude.exe done.  Thank you.`. If you have issues, try running through the steps again or [opening an issue](https://github.com/FeralAI/FightboardHybrid/issues/new).
+
+## Usage
+
+### Button Layout
 
 The Fightboard uses a standard 8-button fightstick layout. To make things easy, any references to these buttons will use the `Generic` labels in this documentation.
 
@@ -30,8 +42,6 @@ A B RT LT
 Y X  R  L
 B A ZR ZL
 ```
-
-## Features
 
 > NOTE: Any saved configuration will be cleared when reflashing the controller!
 
@@ -77,6 +87,7 @@ The overridden LED mode will be saved across power cycles, and **can be cleared 
 * [x] XInput support
 * [x] Switch support
 * [x] Add LED support
+* [x] Create install package
 * [ ] Review button state logic
 * [ ] Optimize HID report construction
 * [ ] Break apart XInput and Switch USB code
