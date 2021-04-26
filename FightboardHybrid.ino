@@ -89,7 +89,8 @@ void setInputMode() {
 }
 
 void setLedMode() {
-	ledMode = xinput ? LedEffectMode::XBOX : LedEffectMode::SFC;
+	if (ledMode == LedEffectMode::NONE)
+		ledMode = xinput ? LedEffectMode::XBOX : LedEffectMode::SFC;
 
 	if (digitalRead(PIN_R3) == LOW) {
 		EEPROM.put(EEPROM_LED_MODE_OFFSET, LedEffectMode::NONE);
