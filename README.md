@@ -59,7 +59,7 @@ D-Pad mode is saved across power cycles.
 By default, the controller will use an Xbox color scheme for XInput and a Super Famicom color scheme for Switch mode. You can also override the color scheme by **holding the following button(s) as the controller is plugged in:**
 
 | LED Effect/Layout | Button(s) | Preview |
-| :---------------- | :----: | :----: | :-------------------: | :-----: |
+| :---------------- | :-------: | :-----: |
 | Xbox | P1 | ![Xbox](.assets/images/XBOX.jpg) |
 | Super Famicom | P2 | ![Super Famicom](.assets/images/SFC.jpg) |
 | Six Button Fighter (SF and KI) | P3 | ![Six Button Fighter](.assets/images/SIX_BUTTON.jpg) |
