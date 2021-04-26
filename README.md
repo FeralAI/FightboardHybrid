@@ -8,13 +8,29 @@ The stock Fightboard firmware supports XInput and a bunch of extra features like
 
 ## Installation
 
-An update package is provided that uses PowerShell and a bundled version of avrdude to handle flashing the microcontroller in the Fightboard. If you're familiar with this process or on Linux/Mac, you can just extract the `.hex` file and flash it manually with your platform's version of avrdude. Otherwise, follow these steps to update your firmware:
+An update package is provided that uses PowerShell and a bundled version of avrdude to handle flashing the microcontroller in the Fightboard. If you're familiar with this process or on Linux/Mac, you can just extract the `.hex` file and flash it manually with your platform's version of avrdude.
+
+**Using the Update Script**:
+
+Follow these steps to update your firmware:
 
 1. Download and extract the latest firmware update package from [Releases](https://github.com/FeralAI/FightboardHybrid/releases).
 1. Press the reset button twice quickly on the bottom of your Fightboard. You'll need a small screwdriver or toothpick to press it. This will put the microcontroller into bootloader mode for about 10 seconds.
 1. Run the `update.bat` file from the extracted firmware update folder. Make sure you do this within a few seconds of resetting the board otherwise it will fail.
 
-That's it! If all went well you should see a success message at the end like `avrdude.exe: 15206 bytes of flash verified` and `avrdude.exe done.  Thank you.`. If you have issues, try running through the steps again or [opening an issue](https://github.com/FeralAI/FightboardHybrid/issues/new).
+**Manual Installation**:
+
+You will need `avrdude` for your platform. You may use the `avrdude.conf` file provided in the update package if needed. To manually update, perform the following:
+
+1. Press the reset button twice quickly on the bottom of your Fightboard. You'll need a small screwdriver or toothpick to press it. This will put the microcontroller into bootloader mode for about 10 seconds.
+1. Find the COM port of the device when in bootloader mode. This will vary by system, but an easy way is to use Arduino IDE's board selection.
+1. Run the following command, replacing `$port` with your COM port (COM10 for example). You should have this command ready to run out prior to resetting your device:
+
+    ```sh
+    avrdude -v -Cavrdude.conf -patmega32u4 -cavr109 -P $port -b57600 -D -Uflash:w:Fightboard.ino.hex:i
+    ```
+
+That's it! If all went well you should see a success message at the end like `avrdude.exe: 15206 bytes of flash verified` and `avrdude.exe done.  Thank you.` If you have issues, try running through the steps again or [opening an issue](https://github.com/FeralAI/FightboardHybrid/issues/new).
 
 ## Usage
 
