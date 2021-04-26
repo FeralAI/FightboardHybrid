@@ -89,6 +89,9 @@ void setInputMode() {
 }
 
 void setLedMode() {
+	if ((byte)ledMode >= LED_EFFECT_COUNT)
+		ledMode = LedEffectMode::NONE;
+
 	if (ledMode == LedEffectMode::NONE)
 		ledMode = xinput ? LedEffectMode::XBOX : LedEffectMode::SFC;
 
