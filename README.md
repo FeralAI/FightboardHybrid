@@ -10,6 +10,13 @@ The stock Fightboard firmware supports XInput and a bunch of extra features like
 
 This firmware uses the standard fightstick layout for the 8 main buttons:
 
+**Arcade/Fightstick**:
+
+```text
+P1 P2 P3 P4
+K1 K2 K3 K4
+```
+
 **XInput**:
 
 ```text
@@ -30,7 +37,7 @@ B A ZR ZL
 
 ### Input Modes
 
-To change the input mode, hold one of the following buttons as the controller is plugged in:
+To change the input mode, **hold one of the following buttons as the controller is plugged in:**
 
 * `SELECT` - Nintendo Switch
 * `START` - XInput
@@ -39,7 +46,7 @@ Input mode is saved across power cycles.
 
 ### D-Pad Modes
 
-You can switch between the 3 stick modes while the controller is in use by pressing `START + SELECT +` one of the following:
+You can switch between the 3 modes for the D-Pad **while the controller is in use by pressing `START + SELECT +` one of the following:**
 
 * `UP` - D-Pad
 * `LEFT` - Emulate Left Analog stick
@@ -49,17 +56,21 @@ D-Pad mode is saved across power cycles.
 
 ### LED Modes
 
-By default, the controller will use an Xbox color scheme for XInput, and a Super Famicom color schema for Switch mode. You can also override the color scheme by holding one of the following buttons when plugging in the controller (XInput buttons):
+By default, the controller will use an Xbox color scheme for XInput, and a Super Famicom color schema for Switch mode. You can also override the color scheme by **holding the following button(s) as the controller is plugged in:**
 
-* `X Button` - Xbox
-* `Y Button` - Super Famicom
-* `RB Button` - Six Button Fighter (Street Fighter and Killer Instinct)
-* `LB Button` - Guilty Gear Type-A
-* `A Button` - Neo-Geo Straight
-* `B Button` - Neo-Geo Curved
-* `Right Trigger` - Neo-Geo Modern (2x2 layout)
+| LED Effect/Layout | XInput | Switch | Arcade [P1, K2, etc.] |
+| :---------------- | :----- | :----- | :-------------------- |
+| Xbox | X | Y | P1 |
+| Super Famicom | Y | X | P2 |
+| Six Button Fighter (SF and KI) | RB | R | P3 |
+| Guilty Gear Type-A | LB | L | P4 |
+| Neo-Geo Straight | A | B | K1 |
+| Neo-Geo Curved | B | A | K2 |
+| Neo-Geo Modern (2x2 layout) | RT | ZR | K3 |
+| Guilty Gear Custom (my layout) | LT | ZL | K4 |
+| Static Rainbow | X + Y + RB + LB | Y + X + R + L | P1 + P2 + P3 + P4 |
 
-The overridden LED mode will be saved across power cycles, and can be cleared by holding `Left Trigger` when plugging the controller in.
+The overridden LED mode will be saved across power cycles, and can be cleared by holding `R3` when plugging the controller in.
 
 ## TODO List
 

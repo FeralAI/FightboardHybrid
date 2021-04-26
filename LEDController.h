@@ -1,3 +1,16 @@
+/************************************************************************************
+ * LED Controller
+ * 
+ * Some effects borrowed from:
+ * https://www.tweaking4all.com/hardware/arduino/arduino-all-ledstrip-effects-in-one/
+ * https://www.tweaking4all.com/forum/miscellaneous-software/lego-millenium-falcon-with-all-ledstrip-effects-in-one-fastled/
+ * 
+ * Adding a new effect:
+ * - Create a new function with the prefix `effect`
+ * - Add function call as switch case in main loop
+ * - Increment the LED_EFFECT_COUNT define
+ ************************************************************************************/
+
 #ifndef _LED_MAPPER_
 #define _LED_MAPPER_
 
@@ -5,6 +18,7 @@
 
 #define LED_PIN 5
 #define LED_COUNT 12
+#define LED_EFFECT_COUNT 9
 #define COLUMN_COUNT 7
 #define COLUMN_HEIGHT 2
 
@@ -58,7 +72,6 @@ uint32_t wheel(byte pos) {
 
 static const uint32_t ColorBlack     = strip.Color(  0,   0,   0,   0);
 static const uint32_t ColorWhite     = strip.Color(  0,   0,   0, 255);
-
 static const uint32_t ColorRed       = strip.Color(255,   0,   0,   0);
 static const uint32_t ColorOrange    = strip.Color(255, 128,   0,   0);
 static const uint32_t ColorYellow    = strip.Color(255, 255,   0,   0);
@@ -72,12 +85,42 @@ static const uint32_t ColorPurple    = strip.Color(128,   0, 255,   0);
 static const uint32_t ColorPink      = strip.Color(255,   0, 255,   0);
 static const uint32_t ColorMagenta   = strip.Color(255,   0, 128,   0);
 
+const ButtonColorMap StaticRainbowButtonMapping[LED_COUNT] = {
+	ButtonColorMap(LED_INDEX_LEFT, ColorRed),
+	ButtonColorMap(LED_INDEX_UP, ColorOrange),
+	ButtonColorMap(LED_INDEX_DOWN, ColorOrange),
+	ButtonColorMap(LED_INDEX_RIGHT, ColorYellow),
+	ButtonColorMap(LED_INDEX_P1, ColorGreen),
+	ButtonColorMap(LED_INDEX_K1, ColorGreen),
+	ButtonColorMap(LED_INDEX_P2, ColorAqua),
+	ButtonColorMap(LED_INDEX_K2, ColorAqua),
+	ButtonColorMap(LED_INDEX_P3, ColorBlue),
+	ButtonColorMap(LED_INDEX_K3, ColorBlue),
+	ButtonColorMap(LED_INDEX_K4, ColorPink),
+	ButtonColorMap(LED_INDEX_P4, ColorPink),
+};
+
+const ButtonColorMap GuiltyGearCustomColorMapping[LED_COUNT] = {
+	ButtonColorMap(LED_INDEX_P1, ColorPink),     // P
+	ButtonColorMap(LED_INDEX_P2, ColorGreen),    // S
+	ButtonColorMap(LED_INDEX_P3, ColorRed),      // HS
+	ButtonColorMap(LED_INDEX_P4, ColorBlack),
+	ButtonColorMap(LED_INDEX_K1, ColorBlue),     // K
+	ButtonColorMap(LED_INDEX_K2, ColorOrange),   // D
+	ButtonColorMap(LED_INDEX_K3, ColorBlack),
+	ButtonColorMap(LED_INDEX_K4, ColorBlack),
+	ButtonColorMap(LED_INDEX_RIGHT, ColorWhite),
+	ButtonColorMap(LED_INDEX_DOWN, ColorWhite),
+	ButtonColorMap(LED_INDEX_LEFT, ColorWhite),
+	ButtonColorMap(LED_INDEX_UP, ColorWhite),
+};
+
 const ButtonColorMap GuiltyGearTypeAColorMapping[LED_COUNT] = {
 	ButtonColorMap(LED_INDEX_P1, ColorBlue),     // K
 	ButtonColorMap(LED_INDEX_P2, ColorGreen),    // S
 	ButtonColorMap(LED_INDEX_P3, ColorRed),      // HS
 	ButtonColorMap(LED_INDEX_P4, ColorBlack),
-	ButtonColorMap(LED_INDEX_K1, ColorPurple),   // P
+	ButtonColorMap(LED_INDEX_K1, ColorPink),     // P
 	ButtonColorMap(LED_INDEX_K2, ColorBlack),
 	ButtonColorMap(LED_INDEX_K3, ColorOrange),   // D
 	ButtonColorMap(LED_INDEX_K4, ColorBlack),
@@ -177,23 +220,12 @@ const ButtonColorMap XboxColorMapping[LED_COUNT] = {
 	ButtonColorMap(LED_INDEX_UP, ColorWhite),
 };
 
-const uint8_t ColorMapCount = 7;
-
-inline uint8_t configureLeds(bool isXInput) __attribute__((always_inline));
 inline void applyColorMapping(const ButtonColorMap colorMapping[LED_COUNT]) __attribute__((always_inline));
 inline void showLeds() __attribute__((always_inline));
 
-uint8_t configureLeds(bool isXInput) {
+void configureLeds() {
 	strip.begin();
-	strip.setBrightness(64); // 25% Brightness
-
-	if (isXInput) {
-		applyColorMapping(XboxColorMapping);
-		return 0;
-	} else {
-		applyColorMapping(SuperFamicomColorMapping);
-		return 1;
-	}
+	strip.setBrightness(128); // 50% Brightness
 }
 
 void applyColorMapping(const ButtonColorMap colorMapping[LED_COUNT]) {
@@ -203,18 +235,30 @@ void applyColorMapping(const ButtonColorMap colorMapping[LED_COUNT]) {
 	showLeds();
 }
 
-void selectColorMapping(uint8_t index) {
-	if (index > ColorMapCount)
-		index = 0;
+enum class LedEffectMode {
+	NONE,
+	XBOX,
+	SFC,
+	SIX_BUTTON,
+	GG_TYPE_A,
+	NEOGEO_STRAIGHT,
+	NEOGEO_CURVED,
+	NEOGEO_MODERN,
+	STATIC_RAINBOW,
+	GG_CUSTOM,
+};
 
-	switch (index) {
-		case 0: applyColorMapping(XboxColorMapping); break;
-		case 1: applyColorMapping(SuperFamicomColorMapping); break;
-		case 2: applyColorMapping(SixButtonFighterColorMapping); break;
-		case 3: applyColorMapping(GuiltyGearTypeAColorMapping); break;
-		case 4: applyColorMapping(NeoGeoStraightColorMapping); break;
-		case 5: applyColorMapping(NeoGeoCurvedColorMapping); break;
-		case 6: applyColorMapping(NeoGeoModernColorMapping); break;
+void selectEffect(LedEffectMode mode) {
+	switch (mode) {
+		case LedEffectMode::XBOX:            applyColorMapping(XboxColorMapping);             break;
+		case LedEffectMode::SFC:             applyColorMapping(SuperFamicomColorMapping);     break;
+		case LedEffectMode::SIX_BUTTON:      applyColorMapping(SixButtonFighterColorMapping); break;
+		case LedEffectMode::GG_TYPE_A:       applyColorMapping(GuiltyGearTypeAColorMapping);  break;
+		case LedEffectMode::NEOGEO_STRAIGHT: applyColorMapping(NeoGeoStraightColorMapping);   break;
+		case LedEffectMode::NEOGEO_CURVED:   applyColorMapping(NeoGeoCurvedColorMapping);     break;
+		case LedEffectMode::NEOGEO_MODERN:   applyColorMapping(NeoGeoModernColorMapping);     break;
+		case LedEffectMode::STATIC_RAINBOW:  applyColorMapping(StaticRainbowButtonMapping);   break;
+		case LedEffectMode::GG_CUSTOM:       applyColorMapping(GuiltyGearCustomColorMapping); break;
 	}
 }
 

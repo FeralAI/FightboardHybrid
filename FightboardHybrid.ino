@@ -20,12 +20,12 @@ typedef enum {
 	RIGHT_ANALOG,
 } DpadMode;
 
-bool xinput = true;                      // Using XInput?
-byte dpadStates[4] = { };                // The dpad input states
-byte ledMode = 0xff;                     // The selected LED mode
-byte buttonStates[BUTTON_INDICES] = { }; // The button states
-DpadMode dpadMode;                       // Current D-Pad mode
-Fightboard board;                        // The board instance
+bool xinput = true;                          // Using XInput?
+byte dpadStates[4] = { };                    // The dpad input states
+LedEffectMode ledMode = LedEffectMode::NONE; // The selected LED mode
+byte buttonStates[BUTTON_INDICES] = { };     // The button states
+DpadMode dpadMode;                           // Current D-Pad mode
+Fightboard board;                            // The board instance
 
 inline void setButton(ButtonMapping mapping, uint8_t portStates[], uint8_t lastButtonStates[]) __attribute__((always_inline));
 inline void setDpad(uint8_t portStates[], uint8_t lastDpadStates[]) __attribute__((always_inline));
@@ -38,7 +38,8 @@ void setup() {
 	board.setupPins();
 	delay(500);
 	setInputMode();
-	setLedMode(configureLeds(xinput));
+	configureLeds();
+	setLedMode();
 
 	SetupHardware(xinput);
 	GlobalInterruptEnable();
@@ -87,29 +88,51 @@ void setInputMode() {
 	}
 }
 
-void setLedMode(uint8_t autoLedMode) {
-	uint8_t newLedMode = 255;
-	if (digitalRead(PIN_P1) == LOW) newLedMode = 0;
-	if (digitalRead(PIN_P2) == LOW) newLedMode = 1;
-	if (digitalRead(PIN_P3) == LOW) newLedMode = 2;
-	if (digitalRead(PIN_P4) == LOW) newLedMode = 3;
-	if (digitalRead(PIN_K1) == LOW) newLedMode = 4;
-	if (digitalRead(PIN_K2) == LOW) newLedMode = 5;
-	if (digitalRead(PIN_K3) == LOW) newLedMode = 6;
-	if (digitalRead(PIN_K4) == LOW) {
-		// Clear saved value
-		EEPROM.put(EEPROM_LED_MODE_OFFSET, 255);
-		ledMode = autoLedMode;
+void setLedMode() {
+	ledMode = xinput ? LedEffectMode::XBOX : LedEffectMode::SFC;
+
+	if (digitalRead(PIN_R3) == LOW) {
+		EEPROM.put(EEPROM_LED_MODE_OFFSET, LedEffectMode::NONE);
+	} else {
+		bool saveLedMode = true;
+		bool buttonStates[] = {
+			digitalRead(PIN_P1) == LOW,
+			digitalRead(PIN_P2) == LOW,
+			digitalRead(PIN_P3) == LOW,
+			digitalRead(PIN_P4) == LOW,
+			digitalRead(PIN_K1) == LOW,
+			digitalRead(PIN_K2) == LOW,
+			digitalRead(PIN_K3) == LOW,
+			digitalRead(PIN_K4) == LOW,
+		};
+
+		if (buttonStates[0] && buttonStates[1] && buttonStates[2] && buttonStates[3]) {
+			ledMode = LedEffectMode::STATIC_RAINBOW;
+		} else if (buttonStates[0]) {
+			ledMode = LedEffectMode::XBOX;
+		} else if (buttonStates[1]) {
+			ledMode = LedEffectMode::SFC;
+		} else if (buttonStates[2]) {
+			ledMode = LedEffectMode::SIX_BUTTON;
+		} else if (buttonStates[3]) {
+			ledMode = LedEffectMode::GG_TYPE_A;
+		} else if (buttonStates[4]) {
+			ledMode = LedEffectMode::NEOGEO_STRAIGHT;
+		} else if (buttonStates[5]) {
+			ledMode = LedEffectMode::NEOGEO_CURVED;
+		} else if (buttonStates[6]) {
+			ledMode = LedEffectMode::NEOGEO_MODERN;
+		} else if (buttonStates[7]) {
+			ledMode = LedEffectMode::GG_CUSTOM;
+		} else {
+			saveLedMode = false;
+		}
+
+		if (saveLedMode)
+			EEPROM.put(EEPROM_LED_MODE_OFFSET, ledMode);
 	}
 
-	if (newLedMode != 255) {
-		ledMode = newLedMode;
-		EEPROM.put(EEPROM_LED_MODE_OFFSET, ledMode);
-	} else if (ledMode > ColorMapCount) {
-		ledMode = autoLedMode;
-	}
-
-	selectColorMapping(ledMode);
+	selectEffect(ledMode);
 }
 
 void setButton(ButtonMapping mapping, uint8_t portStates[], uint8_t lastButtonStates[]) {
