@@ -8,6 +8,8 @@ The stock Fightboard firmware supports XInput and a bunch of extra features like
 
 ## Installation
 
+> NOTE: Any saved configuration will be cleared when reflashing the controller!
+
 An update package is provided that uses PowerShell and a bundled version of avrdude to handle flashing the microcontroller in the Fightboard. If you're familiar with this process or on Linux/Mac, you can just extract the `.hex` file and flash it manually.
 
 **Using the Update Script**:
@@ -20,11 +22,7 @@ Follow these steps to update your firmware:
 
 **Manual Installation**:
 
-You will need `avrdude` for your platform.
-
-1. Press the reset button twice quickly on the bottom of your Fightboard. You'll need a small screwdriver or toothpick to press it. This will put the microcontroller into bootloader mode for about 10 seconds.
-1. Find the COM port of the device when in bootloader mode. This will vary by system, but an easy way is to use Arduino IDE's board selection.
-1. Run the following command, replacing `$port` with your COM port (COM10 for example). You should have this command ready to run out prior to resetting your device:
+You will need `avrdude` for your platform and the COM port of your board when in bootloader mode. Run the following command, replacing `$port` with your COM port (COM10 for example). Have this command ready and run it right after resetting into bootloader mode with the double press:
 
     ```sh
     avrdude -v -Cavrdude.conf -patmega32u4 -cavr109 -P $port -b57600 -D -Uflash:w:Fightboard.ino.hex:i
@@ -58,8 +56,6 @@ A B RT LT
 Y X  R  L
 B A ZR ZL
 ```
-
-> NOTE: Any saved configuration will be cleared when reflashing the controller!
 
 ### Input Modes
 
