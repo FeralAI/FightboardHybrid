@@ -1,6 +1,6 @@
 # Fightboard Hybrid Firmware
 
-Custom firmware for the Fightboard and Fightboard MX by thnikk.
+Custom firmware for the [Fightboard](https://www.etsy.com/listing/786877857/fightboard) and [Fightboard MX](https://www.etsy.com/listing/845376230/fightboard-mx) by [thnikk](https://www.etsy.com/people/thnikk), supporting XInput and Nintendo Switch.
 
 ## Introduction
 
@@ -8,7 +8,7 @@ The stock Fightboard firmware supports XInput and a bunch of extra features like
 
 ## Installation
 
-An update package is provided that uses PowerShell and a bundled version of avrdude to handle flashing the microcontroller in the Fightboard. If you're familiar with this process or on Linux/Mac, you can just extract the `.hex` file and flash it manually with your platform's version of avrdude.
+An update package is provided that uses PowerShell and a bundled version of avrdude to handle flashing the microcontroller in the Fightboard. If you're familiar with this process or on Linux/Mac, you can just extract the `.hex` file and flash it manually.
 
 **Using the Update Script**:
 
@@ -20,7 +20,7 @@ Follow these steps to update your firmware:
 
 **Manual Installation**:
 
-You will need `avrdude` for your platform. You may use the `avrdude.conf` file provided in the update package if needed. To manually update, perform the following:
+You will need `avrdude` for your platform.
 
 1. Press the reset button twice quickly on the bottom of your Fightboard. You'll need a small screwdriver or toothpick to press it. This will put the microcontroller into bootloader mode for about 10 seconds.
 1. Find the COM port of the device when in bootloader mode. This will vary by system, but an easy way is to use Arduino IDE's board selection.
