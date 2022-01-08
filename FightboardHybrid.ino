@@ -66,6 +66,7 @@ void loop() {
 	setButton(board.MapButtonSelect, portStates, lastButtonStates);
 	setButton(board.MapButtonStart, portStates, lastButtonStates);
 	setButton(board.MapButtonLogo, portStates, lastButtonStates);
+	setButton(board.MapButtonCapture, portStates, lastButtonStates);
 	setButton(board.MapButtonL3, portStates, lastButtonStates);
 	setButton(board.MapButtonR3, portStates, lastButtonStates);
 

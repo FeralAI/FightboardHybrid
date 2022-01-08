@@ -8,23 +8,24 @@
 #define PORT_COUNT 5
 
 // Pin mappings
-#define PORT_PIN_UP     PF4 // A3
-#define PORT_PIN_DOWN   PF6 // A1
-#define PORT_PIN_LEFT   PF5 // A2
-#define PORT_PIN_RIGHT  PF7 // A0
-#define PORT_PIN_P1     PD1 // 2/SDA
-#define PORT_PIN_P2     PD0 // 3/SCL
-#define PORT_PIN_P3     PE6 // 7
-#define PORT_PIN_P4     PB5 // 9
-#define PORT_PIN_K1     PB6 // 10
-#define PORT_PIN_K2     PB7 // 11
-#define PORT_PIN_K3     PD6 // 12
-#define PORT_PIN_K4     PC7 // 13
-#define PORT_PIN_SELECT PD7 // 6
-#define PORT_PIN_START  PF1 // A4
-#define PORT_PIN_HOME   PB4 // 8
-#define PORT_PIN_L3     PD4 // 4
-#define PORT_PIN_R3     PF0 // A5
+#define PORT_PIN_UP      PF4 // A3
+#define PORT_PIN_DOWN    PF6 // A1
+#define PORT_PIN_LEFT    PF5 // A2
+#define PORT_PIN_RIGHT   PF7 // A0
+#define PORT_PIN_P1      PD1 // 2/SDA
+#define PORT_PIN_P2      PD0 // 3/SCL
+#define PORT_PIN_P3      PE6 // 7
+#define PORT_PIN_P4      PB5 // 9
+#define PORT_PIN_K1      PB6 // 10
+#define PORT_PIN_K2      PB7 // 11
+#define PORT_PIN_K3      PD6 // 12
+#define PORT_PIN_K4      PC7 // 13
+#define PORT_PIN_SELECT  PD7 // 6
+#define PORT_PIN_START   PF1 // A4
+#define PORT_PIN_HOME    PB4 // 8
+#define PORT_PIN_CAPTURE PD3 // 1
+#define PORT_PIN_L3      PD4 // 4
+#define PORT_PIN_R3      PF0 // A5
 
 #define PIN_UP          A3
 #define PIN_DOWN        A1
@@ -41,13 +42,14 @@
 #define PIN_SELECT      6   // XInput Back  / Switch -
 #define PIN_START       A4  // XInput Start / Switch +
 #define PIN_HOME        8
+#define PIN_CAPTURE     1
 #define PIN_L3          4
 #define PIN_R3          A5
 
 // Input masks
 #define PORTB_INPUT_MASK 0b11110000
 #define PORTC_INPUT_MASK 0b10000000
-#define PORTD_INPUT_MASK 0b11010011
+#define PORTD_INPUT_MASK 0b11011011
 #define PORTE_INPUT_MASK 0b01000000
 #define PORTF_INPUT_MASK 0b11110011
 
@@ -99,6 +101,7 @@ ButtonMapping Fightboard::MapButtonK3(PORTD_INDEX, PORT_PIN_K3, BUTTONRT);
 ButtonMapping Fightboard::MapButtonK4(PORTC_INDEX, PORT_PIN_K4, BUTTONLT);
 ButtonMapping Fightboard::MapButtonSelect(PORTD_INDEX, PORT_PIN_SELECT, BUTTONSELECT);
 ButtonMapping Fightboard::MapButtonStart(PORTF_INDEX, PORT_PIN_START, BUTTONSTART);
+ButtonMapping Fightboard::MapButtonCapture(PORTD_INDEX, PORT_PIN_CAPTURE, BUTTONCAPTURE);
 ButtonMapping Fightboard::MapButtonLogo(PORTB_INDEX, PORT_PIN_HOME, BUTTONHOME);
 ButtonMapping Fightboard::MapButtonL3(PORTD_INDEX, PORT_PIN_L3, BUTTONL3);
 ButtonMapping Fightboard::MapButtonR3(PORTF_INDEX, PORT_PIN_R3, BUTTONR3);
